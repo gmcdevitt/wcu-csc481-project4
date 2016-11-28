@@ -1,0 +1,156 @@
+;;; Title:     Parser
+;;; Professor: Dr. Richard Wyatt
+;;; Student:   M. H. Tong
+;;;
+;;;  Kludge:  'sequence' replaced by 'sequencez' (rww, Nov)
+;;;
+;;; Purpose:   Parse a simple English Sentence for a limited grammar as
+;;;            "The boy saw a box".
+;;;            The sentence must have a noun phrase (a determiner, a noun)
+;;;            or a proper noun,
+;;;            and a verb phrase (a verb, optionally with a complement
+;;;            which is a noun phrase and can be added a prepositional
+;;;            phrase).
+;;;
+;;; Language:  COMMON LISP
+;;;
+;;; Usage:     There are 4 steps to use this program:
+;;;            1-Define the lexicon. For instance, {The, boy, saw, a, box}
+;;;            2-Each word is associated one or more categories and is
+;;;              entered individually into the program using "DEFWORD"
+;;;              command. For instance, the word "SAW" can be a noun or
+;;;              a verb, therefore, one types in
+;;;                (DEFWORD SAW NOUN VERB)
+;;;            3-Define the grammar for valid sentences. A grammar
+;;;              consists in definition of networks, each one gives the
+;;;              sequencez of actions that PARSESENTENCE must do to verify the
+;;;              correctness of the sentence. Each network is entered
+;;;              into the program using "DEFNET" command. For instance,
+;;;              there are 4 networks in the sample grammar:
+;;;              -the sentence is composed of a noun-phrase and a
+;;;               verb-phrase, therefore, one types in
+;;;                 (DEFNET S (PARSE NP) (PARSE VP))
+;;;              -the noun-phrase can be a proper-noun or a noun preceded
+;;;                by a determiner, therefore, one types in
+;;;                 (DEFNET NP EITHER (SEQUENCEZ (CATEGORY PROPER-NOUN))
+;;;                                   (SEQUENCEZ (CATEGORY DET)
+;;;                                             (CATEGORY NOUN)))
+;;;              -the verb-phrase is a verb followed optionally by an
+;;;               complement which is a noun phrase with an optional
+;;;               prepositional-phrase, therefore, one types in
+;;;                 (DEFNET VP EITHER (SEQUENCEZ (CATEGORY VERB))
+;;;                                   (SEQUENCEZ (CATEGORY VERB)
+;;;                                             (PARSE NP)
+;;;                                             (OPTIONAL (PARSE PP))))
+;;;              -the prepositional-phrase is a preposition followed by
+;;;               a noun-phrase, therefore, one types in
+;;;                 (DEFNET PP (CATEGORY PREP) (PARSE NP))
+;;;            4-Define the testing sentence to be parsed using the PARSESENTENCE
+;;;              command. For instance, typing in
+;;;                (parsesentence '(The boy saw a box))
+;;;              one might get the result as:
+;;;                ((S (NP (THE DET) (BOY NOUN)) (VP (SAW VERB) (NP (A DET)
+;;;                 (BOX NOUN)))))
+;;;              which means that:
+;;;                -the word "THE" is a determiner,
+;;;                -the word "BOY" is a noun,
+;;;                -the expression "THE BOY" is a noun phrase,
+;;;                -the word "SAW" is a verb,
+;;;                -the word "A" is a determiner,
+;;;                -the word "BOX" is a noun,
+;;;                -the expression "A BOX" is a noun phrase,
+;;;                -the expression "SAW A BOX" is a verb phrase,
+;;;                -the expression "THE BOY SAW A BOX" is a sentence.
+;;;
+;;; Modeling:  The grammar is compost by networks that specify the parsing
+;;;            rules. Each network has a name, net-name, and is defined by
+;;;            the "DEFNET" command. The syntaxe is:
+;;;              (DEFNET net-name [qualifier [item]] ... )
+;;;            There are 5 types of qualifiers to define each network:
+;;;              a-"PARSE" means that the following item is a network,
+;;;              b-"EITHER" means there are alternatives of the grammar,
+;;;              c-"SEQUENCEZ" means there are one or more items which must
+;;;                           be met for validation,
+;;;              d-"OPTIONAL" means the following item can be omited in
+;;;                           the sentence,
+;;;              e-"CATEGORY" means the next word in the sentence must of
+;;;                           the given category.
+;;;
+;;;            The lexicon is defined by the "DEFWORD" command. Each word
+;;;            is associated with its categories.
+;;;            The syntaxe is
+;;;              (DEFWORD word categories ... )
+;;;            There are 5 categories in this grammar:
+;;;              a-"DET" means the word is a determiner,
+;;;              b-"NOUN" means the word is a noun,
+;;;              c-"PROPER-NOUN" means the word is a proper noun,
+;;;              d-"VERB" means the word is a verb.
+;;;              e-"PREP" means the word is a preposition.
+;;;
+;;;            The parser uses a state variable STATE to store the parsing
+;;;            state, permiting its retrieval in the case of failure.
+;;;            There are 3 parts in the state variable:
+;;;              a-SENTENCE to store the remaining sentence to be parsed,
+;;;              b-PARSE to store the already parsed tree,
+;;;              c-AGENDA to store the remaining actions to be done.
+;;;
+;;;            The program puts the given sentence into the SENTENCE
+;;;            slot of the variable STATE and calls the category analyser
+;;;            to verify the compability of the grammar. If all words
+;;;            in the sentences are accepted and no more unresolved actions
+;;;            are left in the AGENDA slot of the variable STATE, then the
+;;;            program returns the parsed tree; otherwise, it returns NIL.
+;;;
+;;;
+;;;
+;;; Commands:
+;;; (CATEGORYP word category)  ==> boolean
+;;;    Return true if the word can be in the category.
+;;; (GET-NET name)  ==> network
+;;;     Return the network named by name.
+;;; (PARSE net-name) : Put net-name  on the parse-tree
+;;;   list, add the actions of the net-name,  plus
+;;; (DONE net-name), to the agenda; always succeed .
+;;; (SEQUENCEZ actions): add the actions to the agenda;
+;;;   always succeed.
+;;; (DONE net-name): collect what net-name has  parsed
+;;;   into one constituentunit; always succeed.
+;;; (CATEGORY category-name): if the current word is in
+;;;   the category named, add (category-name word)
+;;;   to the parse tree list and succeed, else fail.
+;;; (PARSESENTENCE sentence)  ==> parse tree
+;;;   To parse sentence. STATE is initialized to sentence,
+;;;   an empty parse tree, and an agenda that says "parse an
+;;;   S.", and the lexical variable CHOICE-POINTS is used to
+;;;   save alternate paths.  The STATE-SAVER slot of the
+;;;   state holds a procedure which will save alternatives
+;;;   in CHOICE-POINTS. If DO-STATE fails, the TRY-ALL loop
+;;;   tries the next alternative, until DO-STATE succeeds or
+;;;   no alternatives are left.
+;;;   The STATE-PARSE slot of the STATE will have a list
+;;;   of the answer.
+;;; (DO-STATE state) ==> boolean
+;;;   Return success or failure in applying the agenda
+;;;   stored in state to the sentence. Succeed iff
+;;;   the agenda is empty when the sentence is exhausted.
+;;; (COLLECT-CONSTITUENT parse-tree node-name) ==> constituent
+;;;   collect everything in parse-tree upto node-name
+;;;   into a node-name constituent. E.g.,
+;;;   (COLLECT-CONSTITUENT
+;;;      '((NOUN BOY) (DET THE) NP S) 'NP)
+;;;    returns ((NP (DET THE) (NOUN BOY)) S)
+;;;   (ADD-CONSTITUENT state constituent) ==> undefined
+;;;     Add constituents to the parse tree in state.
+;;;   (ADD-ACTIONS state actions) ==> undefined
+;;;     Add the actions to the agenda in the state.
+;;; (SAVE-ALTERNATIVE state actions) => undefined
+;;;   Save a state with an alternative path to follow,
+;;;   by adding the actions to a copy of the state and
+;;;   saving the copy.
+;;; (EITHER actions action ... ): put the first action on
+;;;   the agenda and save the rest as alternatives; always succeed.
+;;; (OPTIONAL action): put the action and itself back on the
+;;;   agenda, and save the alternative of not doing the action;
+;;;   always succeed.
+
+;;;----------------------------------------------------------------------
