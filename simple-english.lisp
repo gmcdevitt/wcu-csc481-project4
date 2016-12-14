@@ -1,3 +1,4 @@
+; GRAMMAR ----------------------------------------------------------------------
 ; sentence
 (defnet S	(sequencez (parse NP) (parse VP)))
 
@@ -20,7 +21,10 @@
 (defnet PP				
     (category PREP)
     (parse NP))
+; ------------------------------------------------------------------------------
 
+
+; TEST CASES -------------------------------------------------------------------
 ; These should all parse (p for pass)
 (defconstant p1 '(John did his homework)) ;;Basic sentence                    	
 (defconstant p2 '(John drove home))       ;;Another basic one         			
@@ -33,8 +37,11 @@
 ;;These should not work (f for fail)
 (defconstant f1 '(The room needed some lights))    ;;should not work since lights is a count noun
 (defconstant f2 '(The plate had three hair on it))    ;;hair is a mass noun and therefore cannot be counted (in my grammar anyway)
+; ------------------------------------------------------------------------------
 
-(defword john PROPER-NOUN)
+
+; LEXICON ----------------------------------------------------------------------
+(defword john PROPER-NOUN) ; John is very lonley in my little world here
 
 (defword for PREP)
 (defword without PREP)
@@ -110,3 +117,4 @@
 (defword microphone CNOUN)
 (defword mouse CNOUN) ;;; As in for a keyboard
 (defword screwdriver CNOUN)
+; ------------------------------------------------------------------------------
