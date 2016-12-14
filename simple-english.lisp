@@ -45,6 +45,7 @@
 (defword his DET) ; should be okay since my only proper noun is john. lets me do things like "his clock" or "his homework"
 
 (defword some QUANT)
+(defword more QUANT)
 
 (defword three NUM)
 
