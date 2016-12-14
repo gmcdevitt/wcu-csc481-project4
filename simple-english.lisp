@@ -6,6 +6,7 @@
     either (sequencez (category PROPER-NOUN))
            (sequencez (category NOUN))
 		   (sequencez (category QUANT) (category MNOUN))
+		   (sequencez (category NUM) (category CNOUN))
            (sequencez (category DET) (category MNOUN)))
 		   
 ; verb phrase
@@ -43,7 +44,11 @@
 
 (defword some QUANT)
 
+(defword three NUM)
+
 (defword did VERB)
+(defword ate VERB)
+(defword went VERB)
 (defword drove VERB)
 (defword be VERB)
 (defword required VERB)
@@ -51,6 +56,7 @@
 
 (defwork home NOUN)
 (defwork garden NOUN)
+(defwork cabinet NOUN)
 (defwork recepie NOUN)
 
 (defword wood MNOUN)
@@ -90,8 +96,8 @@
 (defword lights CNOUN)
 (defword student CNOUN)
 (defword car CNOUN)
-(defword plate CNOUN)
-(defword cup CNOUN)
+(defword plates CNOUN)
+(defword cups CNOUN)
 (defword microphone CNOUN)
 (defword mouse CNOUN) ;;; As in for a keyboard
 (defword screwdriver CNOUN)
