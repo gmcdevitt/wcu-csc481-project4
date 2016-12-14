@@ -1,3 +1,36 @@
+; sentence
+(defnet S	(sequencez (parse NP) (parse VP)))
+; noun phrase
+(defnet np				
+    either (sequencez (category PROPER-NOUN))
+           (sequencez (category NOUN))
+           (sequencez (category DET) (category MNOUN)))
+; verb phrase
+(defnet VP				
+    either (sequencez (category VERB))
+           (sequencez (category VERB) (parse NP) (optional (parse PP))))
+;prepositional phrase
+(defnet PP				
+    (category PREP)
+    (parse NP))
+
+; These should all parse
+(defconstant t1 '(John did his homework))                    	
+(defconstant t2 '(John drove home))                			
+(defconstant t3 '(John ate some food))    
+(defconstant t4 '(John cleaned alot-of plates))    
+   
+
+(defword john PROPER-NOUN)
+
+(defword the DET)
+(defword a DET)
+(defword his DET) ; should be okay since my only proper noun is john. lets me do things like "his clock" or "his homework"
+
+(defword did VERB)
+
+(defwork home NOUN)
+
 (defword wood MNOUN)
 (defword ice MNOUN)
 (defword cloth MNOUN)
