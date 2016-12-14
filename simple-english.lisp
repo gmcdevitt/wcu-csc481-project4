@@ -32,7 +32,7 @@
 
 ;;These should not work (f for fail)
 (defconstant f1 '(The room needed some lights))    ;;should not work since lights is a count noun
-(defconstant f2 '(The cabinet needed more plates))    ;;plates is not a mass noun
+(defconstant f2 '(The plate had three hair on it))    ;;hair is a mass noun and therefore cannot be counted (in my grammar anyway)
 
 (defword john PROPER-NOUN)
 
@@ -60,6 +60,7 @@
 (defword had VERB)
 
 (defword home NOUN)
+(defword it NOUN) ;i know this is a pronoun, but i didn't want to complicate the grammar for one more word 
 (defword garden NOUN)
 (defword cabinet NOUN)
 (defword recepie NOUN)
