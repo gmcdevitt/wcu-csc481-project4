@@ -54,10 +54,10 @@
 (defword required VERB)
 (defword needed VERB)
 
-(defwork home NOUN)
-(defwork garden NOUN)
-(defwork cabinet NOUN)
-(defwork recepie NOUN)
+(defword home NOUN)
+(defword garden NOUN)
+(defword cabinet NOUN)
+(defword recepie NOUN)
 
 (defword wood MNOUN)
 (defword apple MNOUN)
