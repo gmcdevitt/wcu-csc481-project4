@@ -1,105 +1,40 @@
-; SLIME 2013-06-26; Loading #P"/home/gm860485/code/csc481/project4/resources/parser.sse2f".
-; Loading #P"/home/gm860485/code/csc481/project4/simple-english.lisp".
-
-((SEQUENCEZ (PARSE NP) (PARSE VP))) 
-(EITHER (SEQUENCEZ (CATEGORY PROPER-NOUN))
-        (SEQUENCEZ (CATEGORY NOUN))
-        (SEQUENCEZ (CATEGORY QUANT) (CATEGORY MNOUN))
-        (SEQUENCEZ (CATEGORY NUM) (CATEGORY CNOUN))
-        (SEQUENCEZ (CATEGORY DET) (CATEGORY NOUN))
-        (SEQUENCEZ (CATEGORY DET) (CATEGORY MNOUN))) 
-(EITHER (SEQUENCEZ (CATEGORY VERB))
-        (SEQUENCEZ (CATEGORY VERB) (OPTIONAL (PARSE PP)))
-        (SEQUENCEZ (CATEGORY VERB) (PARSE NP) (OPTIONAL (PARSE PP)))) 
-((CATEGORY PREP) (PARSE NP)) 
-JOHN 
-FOR 
-WITHOUT 
-IN 
-THE 
-A 
-HIS 
-SOME 
-THREE 
-DID 
-ATE 
-WENT 
-DROVE 
-BE 
-REQUIRED 
-NEEDED 
-WAS 
-HAD 
-HOME 
-GARDEN 
-CABINET 
-RECEPIE 
-RUN 
-BROKEN 
-FOOD 
-WOOD 
-APPLE 
-ICE 
-CLOTH 
-WATER 
-STEEL 
-METAL 
-ALUMINUM 
-GLASS 
-LEATHER 
-HAIR 
-AIR 
-MILK 
-WINE 
-CAKE 
-MEAT 
-HOMEWORK 
-HEAT 
-PLASTIC 
-COLD 
-WOOL 
-DESK 
-CHAIR 
-FLAG 
-CLOCK 
-COMPUTER 
-KEYBOARD 
-PROJECTOR 
-BOOK 
-BOOKCASE 
-PEN 
-NOTEBOOK 
-BAG 
-LIGHTS 
-STUDENT 
-CAR 
-PLATES 
-CUPS 
-MICROPHONE 
-MOUSE 
-SCREWDRIVER 
-CL-USER> (parsesentence p1)
+CL-USER> (parsesentence p1) ; Pretty much a basic sentence, just to make sure things are working
 
 ((S (NP (JOHN PROPER-NOUN)) (VP (DID VERB) (NP (HIS DET) (HOMEWORK MNOUN)))))
-CL-USER> (parsesentence p2)
+
+CL-USER> (parsesentence p2) ; Another somewhat different sanity check (no determiner)
+
 ((S (NP (JOHN PROPER-NOUN)) (VP (DROVE VERB) (NP (HOME NOUN)))))
-CL-USER> (parsesentence p3)
+
+CL-USER> (parsesentence p3) ; This one includes a prepositional phrase, which is cool
+
 ((S (NP (JOHN PROPER-NOUN))
   (VP (ATE VERB) (NP (SOME QUANT) (FOOD MNOUN))
    (PP (IN PREP) (NP (THE DET) (GARDEN NOUN))))))
-CL-USER> (parsesentence p4)
+
+CL-USER> (parsesentence p4) ; I thought this would be an interesting sentence because it uses run as a noun rather than a verb
+
 ((S (NP (JOHN PROPER-NOUN))
   (VP (WENT VERB) (PP (FOR PREP) (NP (A DET) (RUN NOUN))))))
-CL-USER> (parsesentence p5)
+
+CL-USER> (parsesentence p5) ; This one does not use a proper noun 
+
 ((S (NP (SOME QUANT) (GLASS MNOUN)) (VP (WAS VERB) (NP (BROKEN NOUN)))))
-CL-USER> (parsesentence p6)
+
+CL-USER> (parsesentence p6) ; Uses a mass noun properly with a quantifier
+
 ((S (NP (THE DET) (RECEPIE NOUN))
   (VP (REQUIRED VERB) (NP (SOME QUANT) (APPLE MNOUN)))))
-CL-USER> (parsesentence p7)
+
+CL-USER> (parsesentence p7) ; Uses a count noun properly with a number
+
 ((S (NP (THE DET) (CABINET NOUN))
   (VP (HAD VERB) (NP (THREE NUM) (CUPS CNOUN)))))
-CL-USER> (parsesentence f1)
+
+CL-USER> (parsesentence f1) ; This one uses a quantifier and a count noun (some lights), which is incorrect
 NIL
-CL-USER> (parsesentence f2)
+
+CL-USER> (parsesentence f2)  ; This one uses a mass noun but tries to put a number in front of it (three hair). Trying to mean three strands of hair.
 NIL
-CL-USER> 
+
+;;; END
