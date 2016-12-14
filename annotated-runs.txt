@@ -1,3 +1,7 @@
+;; Gerard McDevitt
+;; CSC 481 - Artificial Intelligence Project 4
+;; Test sentences (positive and negative) for my simple english grammar and lexicon
+
 CL-USER> (parsesentence p1) ; Pretty much a basic sentence, just to make sure things are working
 
 ((S (NP (JOHN PROPER-NOUN)) (VP (DID VERB) (NP (HIS DET) (HOMEWORK MNOUN)))))
