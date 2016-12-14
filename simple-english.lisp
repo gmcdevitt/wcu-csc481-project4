@@ -7,6 +7,7 @@
            (sequencez (category NOUN))
 		   (sequencez (category QUANT) (category MNOUN))
 		   (sequencez (category NUM) (category CNOUN))
+		   (sequencez (category DET) (category NOUN))
            (sequencez (category DET) (category MNOUN)))
 		   
 ; verb phrase
@@ -37,6 +38,7 @@
 
 (defword for PREP)
 (defword without PREP)
+(defword in PREP)
 
 (defword the DET)
 (defword a DET)
@@ -53,12 +55,17 @@
 (defword be VERB)
 (defword required VERB)
 (defword needed VERB)
+(defword was VERB)
+(defword had VERB)
 
 (defword home NOUN)
 (defword garden NOUN)
 (defword cabinet NOUN)
 (defword recepie NOUN)
+(defword run NOUN) ; to go for a 'run'
+(defword broken NOUN) ; broken as in the state (the glass is broken)
 
+(defword food MNOUN)
 (defword wood MNOUN)
 (defword apple MNOUN)
 (defword ice MNOUN)
