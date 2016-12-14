@@ -1,3 +1,7 @@
+;; Gerard McDevitt
+;; CSC 481 - Artificial Intelligence Project 4
+;; A simple english grammar and lexicon with test cases
+
 ; GRAMMAR ----------------------------------------------------------------------
 ; sentence
 (defnet S	(sequencez (parse NP) (parse VP)))
